@@ -186,7 +186,8 @@ const Admin = () => {
                     {/* Product List Section */}
                     <div className="lg:col-span-2 space-y-4">
                         <h2 className="text-xl font-semibold mb-4">Product List</h2>
-                        <div className="bg-white rounded-xl shadow-md overflow-hidden">
+                        {/* Desktop Table View */}
+                        <div className="bg-white rounded-xl shadow-md overflow-hidden hidden md:block">
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gray-50">
                                     <tr>
@@ -224,6 +225,27 @@ const Admin = () => {
                                 </tbody>
                             </table>
                             {products.length === 0 && <p className="p-6 text-center text-gray-500">No products found.</p>}
+                        </div>
+
+                        {/* Mobile Card View */}
+                        <div className="md:hidden space-y-4">
+                            {products.map((product) => (
+                                <div key={product._id} className="bg-white p-4 rounded-xl shadow-md flex items-center justify-between">
+                                    <div className="flex items-center gap-4">
+                                        <img className="h-16 w-16 rounded-lg object-cover" src={`https://e-commerce-lfmp.onrender.com/${product.image}`} alt="" />
+                                        <div>
+                                            <h3 className="font-semibold text-gray-800">{product.name}</h3>
+                                            <p className="text-primary font-bold">₹{product.price}</p>
+                                            <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">{product.category}</span>
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col gap-2">
+                                        <button onClick={() => handleEdit(product)} className="p-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100"><FiEdit2 /></button>
+                                        <button onClick={() => handleDelete(product._id)} className="p-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100"><FiTrash2 /></button>
+                                    </div>
+                                </div>
+                            ))}
+                            {products.length === 0 && <p className="text-center text-gray-500 mt-4">No products found.</p>}
                         </div>
                     </div>
                 </div>
