@@ -1,11 +1,26 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { FiSearch, FiHeart, FiUser, FiMenu, FiX, FiGlobe, FiShoppingCart } from 'react-icons/fi';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { FiSearch, FiHeart, FiUser, FiMenu, FiX, FiGlobe, FiShoppingCart, FiLogOut } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [user, setUser] = useState(null);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
+        }
+    }, []);
+
+    const handleLogout = () => {
+        localStorage.removeItem('user');
+        setUser(null);
+        navigate('/login');
+    };
 
     return (
         <nav className="fixed top-0 left-0 z-50 w-full bg-white shadow-sm overflow-visible">
@@ -28,7 +43,7 @@ const Navbar = () => {
                         <div className="relative w-full">
                             <input
                                 type="text"
-                                placeholder="Search for policies, products..."
+                                placeholder="Search for products..."
                                 className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-200 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary bg-gray-50/50"
                             />
                             <div className="absolute left-3 top-2.5 text-gray-400">
@@ -49,11 +64,18 @@ const Navbar = () => {
                             <FiHeart size={22} title="Wishlist" />
                         </motion.div>
                         <motion.div whileHover={{ scale: 1.1 }} className="cursor-pointer hover:text-blue-500 transition">
-                            <FiShoppingCart size={22} title="Wishlist" />
+                            <FiShoppingCart size={22} title="Cart" />
                         </motion.div>
-                        <motion.div whileHover={{ scale: 1.1 }} className="cursor-pointer hover:text-primary transition">
-                            <Link to="/admin"><FiUser size={22} title="Admin" /></Link>
-                        </motion.div>
+
+                        {user ? (
+                            <motion.div whileHover={{ scale: 1.1 }} className="cursor-pointer hover:text-red-500 transition" onClick={handleLogout}>
+                                <FiLogOut size={22} title="Logout" />
+                            </motion.div>
+                        ) : (
+                            <motion.div whileHover={{ scale: 1.1 }} className="cursor-pointer hover:text-primary transition">
+                                <Link to="/login"><FiUser size={22} title="Login" /></Link>
+                            </motion.div>
+                        )}
                     </div>
 
                     {/* Mobile Menu Button */}
