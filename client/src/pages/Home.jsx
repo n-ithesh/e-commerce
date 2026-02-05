@@ -19,10 +19,11 @@ const Home = () => {
                 const res = await axios.get('http://localhost:5000/api/products');
                 setProducts(res.data);
 
-                // Simple logic to split products for demo purposes
-                // In real app, might fetch by category or flag
-                setNewArrivals(res.data.slice(0, 5));
-                setBestSellers(res.data.slice(5, 10)); // Assuming there are enough products
+                // Show latest 8 products in New Arrivals
+                setNewArrivals(res.data.slice(0, 8));
+
+                // For Best Sellers, show products (can be filtered by sales count in real app)
+                setBestSellers(res.data.slice(0, 4));
 
                 setLoading(false);
             } catch (error) {
@@ -49,8 +50,8 @@ const Home = () => {
 
             <ProductSection title="New Arrivals" products={newArrivals.length > 0 ? newArrivals : products.slice(0, 4)} />
 
-            <ProductSection title="Best Sellers" products={bestSellers.length > 0 ? bestSellers : products.slice(0, 4)} />
-                
+            <ProductSection title="Best Sellers" products={bestSellers.length > 0 ? bestSellers : products.slice(3, 7)} />
+
             <PromoBanner />
 
 

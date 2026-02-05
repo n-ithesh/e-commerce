@@ -16,6 +16,7 @@ const Admin = () => {
         image: null
     });
     const [loading, setLoading] = useState(false);
+    const [editingId, setEditingId] = useState(null);
 
     // Fetch Products
     const fetchProducts = async () => {
@@ -39,6 +40,26 @@ const Admin = () => {
         setFormData({ ...formData, image: e.target.files[0] });
     };
 
+    const handleEdit = (product) => {
+        setEditingId(product._id);
+        setFormData({
+            name: product.name,
+            price: product.price,
+            description: product.description,
+            category: product.category,
+            discount: product.discount || 0,
+            image: null // Keep null so we don't re-upload unless changed
+        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const handleCancelEdit = () => {
+        setEditingId(null);
+        setFormData({
+            name: '', price: '', description: '', category: '', discount: '', image: null
+        });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -49,19 +70,30 @@ const Admin = () => {
         data.append('description', formData.description);
         data.append('category', formData.category);
         data.append('discount', formData.discount);
-        data.append('image', formData.image);
+        if (formData.image) {
+            data.append('image', formData.image);
+        }
 
         try {
-            await axios.post('http://localhost:5000/api/products', data, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
-            toast.success('Product Added Successfully!');
+            if (editingId) {
+                await axios.put(`http://localhost:5000/api/products/${editingId}`, data, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+                toast.success('Product Updated Successfully!');
+                setEditingId(null);
+            } else {
+                await axios.post('http://localhost:5000/api/products', data, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+                toast.success('Product Added Successfully!');
+            }
+
             setFormData({
                 name: '', price: '', description: '', category: '', discount: '', image: null
             });
             fetchProducts();
         } catch (error) {
-            toast.error('Failed to add product');
+            toast.error(editingId ? 'Failed to update product' : 'Failed to add product');
             console.error(error);
         } finally {
             setLoading(false);
@@ -86,13 +118,13 @@ const Admin = () => {
             <div className="max-w-6xl mx-auto">
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
-                    <Link to="/" className="text-primary underline">Back to Home</Link>
+                    <Link to="/" className="text-white bg-primary p-2 rounded">Back to Home</Link>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Form Section */}
                     <div className="bg-white p-6 rounded-xl shadow-md h-fit">
-                        <h2 className="text-xl font-semibold mb-4">Add New Product</h2>
+                        <h2 className="text-xl font-semibold mb-4">{editingId ? 'Edit Product' : 'Add New Product'}</h2>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Product Name</label>
@@ -136,9 +168,16 @@ const Admin = () => {
                                 {formData.image && <p className="text-xs text-green-600 mt-2">Selected: {formData.image.name}</p>}
                             </div>
 
-                            <button type="submit" disabled={loading} className="w-full bg-primary text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition disabled:opacity-50">
-                                {loading ? 'Uploading...' : 'Add Product'}
-                            </button>
+                            <div className="flex gap-2">
+                                <button type="submit" disabled={loading} className="flex-1 bg-primary text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition disabled:opacity-50">
+                                    {loading ? 'Processing...' : (editingId ? 'Update Product' : 'Add Product')}
+                                </button>
+                                {editingId && (
+                                    <button type="button" onClick={handleCancelEdit} disabled={loading} className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600 transition">
+                                        Cancel
+                                    </button>
+                                )}
+                            </div>
                         </form>
                     </div>
 
@@ -175,6 +214,7 @@ const Admin = () => {
                                                 {product.category}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                <button onClick={() => handleEdit(product)} className="text-blue-600 hover:text-blue-900 ml-4"><FiEdit2 /></button>
                                                 <button onClick={() => handleDelete(product._id)} className="text-red-600 hover:text-red-900 ml-4"><FiTrash2 /></button>
                                             </td>
                                         </tr>

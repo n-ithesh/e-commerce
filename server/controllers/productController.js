@@ -47,9 +47,29 @@ exports.updateProduct = async (req, res) => {
         const product = await Product.findById(req.params.id);
         if (!product) return res.status(404).json({ message: 'Product not found' });
 
-        // Update fields (simplified for now, usually checks if fields exist in body)
-        // Note: Image update logic adds complexity, skipping for this basic implementation unless requested
-        Object.assign(product, req.body);
+        const { name, price, description, category, discount } = req.body;
+
+        // Update text fields
+        if (name) product.name = name;
+        if (price) product.price = price;
+        if (description) product.description = description;
+        if (category) product.category = category;
+        if (discount) product.discount = discount;
+
+        // Update image if a new one is uploaded
+        if (req.file) {
+            // Delete old image if it's a local file
+            if (product.image && !product.image.startsWith('http')) {
+                const oldImagePath = path.resolve(product.image);
+                if (fs.existsSync(oldImagePath)) {
+                    fs.unlink(oldImagePath, (err) => {
+                        if (err) console.error('Failed to delete old image:', err);
+                    });
+                }
+            }
+            // Set new image path
+            product.image = req.file.path.replace(/\\/g, '/');
+        }
 
         const updatedProduct = await product.save();
         res.json(updatedProduct);
