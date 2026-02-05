@@ -16,7 +16,7 @@ const Home = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/products');
+                const res = await axios.get('https://e-commerce-lfmp.onrender.com/api/products');
                 setProducts(res.data);
 
                 // Show latest 8 products in New Arrivals

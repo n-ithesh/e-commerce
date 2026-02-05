@@ -7,7 +7,7 @@ const ProductCard = ({ product }) => {
     // If product.image starts with http, use it, else prepend server url
     const imageUrl = product.image.startsWith('http')
         ? product.image
-        : `http://localhost:5000/${product.image}`;
+        : `https://e-commerce-lfmp.onrender.com/${product.image}`;
 
     const discountPrice = Math.round(product.price - (product.price * (product.discount / 100)));
 

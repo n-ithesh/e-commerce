@@ -26,7 +26,7 @@ const Login = () => {
 
         const endpoint = isLogin ? '/login' : '/register';
         try {
-            const res = await axios.post(`http://localhost:5000/api/auth${endpoint}`, formData);
+            const res = await axios.post(`https://e-commerce-lfmp.onrender.com/api/auth${endpoint}`, formData);
 
             if (isLogin) {
                 localStorage.setItem('user', JSON.stringify(res.data.user));

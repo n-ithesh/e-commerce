@@ -21,7 +21,7 @@ const Admin = () => {
     // Fetch Products
     const fetchProducts = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/products');
+            const res = await axios.get('https://e-commerce-lfmp.onrender.com/api/products');
             setProducts(res.data);
         } catch (error) {
             console.error(error);
@@ -76,13 +76,13 @@ const Admin = () => {
 
         try {
             if (editingId) {
-                await axios.put(`http://localhost:5000/api/products/${editingId}`, data, {
+                await axios.put(`https://e-commerce-lfmp.onrender.com/api/products/${editingId}`, data, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
                 toast.success('Product Updated Successfully!');
                 setEditingId(null);
             } else {
-                await axios.post('http://localhost:5000/api/products', data, {
+                await axios.post('https://e-commerce-lfmp.onrender.com/api/products', data, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
                 toast.success('Product Added Successfully!');
@@ -103,7 +103,7 @@ const Admin = () => {
     const handleDelete = async (id) => {
         if (window.confirm("Are you sure you want to delete this product?")) {
             try {
-                await axios.delete(`http://localhost:5000/api/products/${id}`);
+                await axios.delete(`https://e-commerce-lfmp.onrender.com/api/products/${id}`);
                 toast.success("Product deleted");
                 fetchProducts();
             } catch (error) {
@@ -202,7 +202,7 @@ const Admin = () => {
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="flex items-center">
                                                     <div className="h-10 w-10 flex-shrink-0">
-                                                        <img className="h-10 w-10 rounded-full object-cover" src={`http://localhost:5000/${product.image}`} alt="" />
+                                                        <img className="h-10 w-10 rounded-full object-cover" src={`https://e-commerce-lfmp.onrender.com/${product.image}`} alt="" />
                                                     </div>
                                                     <div className="ml-4">
                                                         <div className="text-sm font-medium text-gray-900">{product.name}</div>
