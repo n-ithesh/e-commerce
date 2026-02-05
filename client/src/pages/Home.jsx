@@ -47,15 +47,9 @@ const Home = () => {
         <div className="min-h-screen bg-gray-50 font-sans">
             <Navbar />
             <HeroSlider />
-
             <ProductSection title="New Arrivals" products={newArrivals.length > 0 ? newArrivals : products.slice(0, 4)} />
-
             <ProductSection title="Best Sellers" products={bestSellers.length > 0 ? bestSellers : products.slice(3, 7)} />
-
             <PromoBanner />
-
-
-
             <ContactStrip />
             <Footer />
         </div>
