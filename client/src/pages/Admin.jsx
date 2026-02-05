@@ -113,12 +113,14 @@ const Admin = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-100 p-8">
+        <div className="min-h-screen bg-gray-100 p-4 sm:p-8">
             <ToastContainer position="top-right" />
             <div className="max-w-6xl mx-auto">
-                <div className="flex justify-between items-center mb-8">
-                    <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
-                    <Link to="/" className="text-white bg-primary p-2 rounded">Back to Home</Link>
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Admin Dashboard</h1>
+                    <Link to="/" className="w-auto text-center bg-primary text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition shadow-md self-end sm:self-auto">
+                        Back to Home
+                    </Link>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
